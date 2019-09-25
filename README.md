@@ -58,6 +58,21 @@ from durbango.tensorboard_parser import *
 parsed = parse_tf_events_file('/home/shleifer/conv_ai/tboard_logs/events.out.tfevents.1564283968.shleifer-gpu-3-vm')
 This is a dataframe where each column is a metric and each row is an epoch.
 ```
+### send_sms
+(send an example text before you rely on this not to break.)
+
+
+1. set up a twilio account
+2. `pip install twilio`
+3. add something to your dotfiles that
+
+### Docs ToDo:
+- imports.py
+- feature importance
+- `cross_val_predict_proba`
+- `send_sms`
+- `count_df`
+- `dsort` and `asort`
 
 ### Naming
 - `yhat`: column containing predictions
@@ -72,14 +87,9 @@ This is a dataframe where each column is a metric and each row is an epoch.
 
 
 ## Contributing
+- `pip install -e .`
 - Run tests with `pytest tests/`, add new files to the `tests` directory.
 - if you want to use a library that is not already used in global scope and requires a pip install,
 consider importing it inside the functions that use it
 
-### Docs ToDo:
-- imports.py
-- feature importance
-- `cross_val_predict_proba`
-- `send_sms`
-- `count_df`
-- `dsort` and `asort`
+
