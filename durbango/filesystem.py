@@ -49,10 +49,11 @@ def make_directory_if_not_there(path) -> None:
     Path(path).mkdir(exist_ok=True)
 
 
-def make_dir_structure_under(path) -> None:
-    """Uses p.parent.mkdir(parents=True, exist_ok=True)."""
+def mpath(path, parents=True, exist_ok=True) -> Path:
+    """Make a directory at path, and return it."""
     p = Path(path)
-    p.parent.mkdir(parents=True, exist_ok=True)
+    p.mkdir(exist_ok=exist_ok, parents=parents)
+    return p
 
 
 def tar_compress(folder_path, save_path=None):

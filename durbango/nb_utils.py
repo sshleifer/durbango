@@ -367,7 +367,7 @@ def add_oof_yhat_column(clf, xydf, feature_names, y_col, n_folds=3, new_col='oof
     return xydf  # .drop('fold', 1)
 
 
-def test_low_var(df):
+def check_low_var(df):
     desc = df.describe().T
     low_var = desc['std'].loc[lambda x: x == 0]
     if low_var.shape[0] >= 0:

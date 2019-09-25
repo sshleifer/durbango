@@ -10,6 +10,8 @@ from durbango.filesystem import get_git_rev
 from sklearn.linear_model import LinearRegression
 from sklearn.dummy import DummyRegressor, DummyClassifier
 
+from durbango import *
+
 
 class TestShit(unittest.TestCase):
     def test_blind_descending_sort(self):

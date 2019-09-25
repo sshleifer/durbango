@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold, KFold
 
-from .nb_utils import shape_assert
+from durbango.nb_utils import shape_assert
 
 def predict_proba_fn_binary(m, x): return m.predict_proba(x)[:, 1]
 def predict_proba(m, x): return m.predict_proba(x)
