@@ -4,13 +4,14 @@ import numpy as np
 import pandas as pd
 from pandas.util.testing import assert_frame_equal, assert_series_equal
 
+from durbango import *  # want to make sure star import doesn't break
 from durbango.nb_utils import _sort
-from durbango.cross_val import cross_val_predict_proba_df, cross_val_predict_proba
+from durbango.cross_val import cross_val_predict_proba_df
 from durbango.filesystem import get_git_rev
-from sklearn.linear_model import LinearRegression
-from sklearn.dummy import DummyRegressor, DummyClassifier
+from sklearn.dummy import DummyClassifier
 
-from durbango import *
+from durbango.monitoring import get_active_processes_df
+
 
 
 class TestShit(unittest.TestCase):
@@ -55,6 +56,9 @@ class TestCrossVal(unittest.TestCase):
                                               mock_df['e'] > 5, task_type='binary', stratified=True, random_state=12)
             
             
-        
-        
-        #import ipdb; ipdb.set_trace()
+
+class TestPSAux(unittest.TestCase):
+
+    def test_ps_aux(self):
+        ps_aux_df = get_active_processes_df()
+
