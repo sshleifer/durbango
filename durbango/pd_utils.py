@@ -1,6 +1,7 @@
 """date utilities for pandas, dataframe equality checkers, mergers and joiners"""
 import resource
 import sys
+import logging
 from math import floor, log10
 
 import numpy as np
@@ -10,7 +11,10 @@ import warnings
 from collections import OrderedDict
 from pandas.util.testing import assert_frame_equal
 
-from durbango.nb_utils import logger, to_list
+from durbango.nb_utils import to_list
+
+
+logger = logging.getLogger(__name__)
 
 
 def convert_dates(date_ser, date_format=None, errors='raise'):
@@ -825,8 +829,6 @@ def set_memory_limit(limit_gb):
     '''
     if not (u'linux' in sys.platform):
         warnings.warn(u'This will not do anything since this is not a linux platform')
-        logger.warning(u'This will not do anything since this is not a linux platform')
-
     _, hard = resource.getrlimit(resource.RLIMIT_AS)
     limit_bytes = int(limit_gb / 1.0e9) if limit_gb is not None else hard
     return resource.setrlimit(resource.RLIMIT_AS, (limit_bytes, hard))

@@ -10,8 +10,6 @@ import re
 import time
 from tqdm import tqdm, tqdm_notebook
 
-import logging
-logger = logging.getLogger(__name__)
 from ipykernel.kernelapp import IPKernelApp
 def in_notebook(): return IPKernelApp.initialized()
 tqdm_nice = tqdm_notebook if in_notebook() else tqdm
@@ -80,9 +78,6 @@ def lmap(*args): return list(map(*args))
 def arrmap(*args): return np.array(lmap(*args))
 def keys(dct): return list(dct.keys())
 def vals(dct): return list(dct.values())
-
-# os utils
-
 
 def parse_date_from_path(path, pattern=r'\d+', date_format=None):
     ''' Extract date string from path (using regex) and return as pandas.Timestamp

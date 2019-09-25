@@ -63,6 +63,12 @@ This is a dataframe where each column is a metric and each row is an epoch.
 - `yhat`: column containing predictions
 - `y`: column containing targets
 - `output_df` dataframe with (at least) columns `y` and `yhat` for inspection and metrics.
+- `oof` stands for out of fold, so `add_oof_yhat_column` adds a column containing with out of fold predictions.
+- `clf` stands for any sklearn style estimator (terminology from scikit docs)
+- `X` a matrix of features
+- `df`: pd.DataFrame
+- `ser`: pd.Series
+- `arr`: np.Array
 
 
 ## Contributing
