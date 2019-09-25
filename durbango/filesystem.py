@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import pickle
 
-Path.ls = property(lambda self: sorted(list(self.iterdir())))
+Path.ls = lambda self: sorted(list(self.iterdir()))
 from .nb_utils import tqdm_nice
 
 

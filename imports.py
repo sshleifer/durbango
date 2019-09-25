@@ -1,4 +1,4 @@
-#IMPORTS
+#IMPORTS at top of notebook
 %load_ext autoreload
 %autoreload 2
 %matplotlib inline
@@ -32,6 +32,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from IPython.lib.display import FileLink
+
 from durbango import *
 
 HOSTNAME = socket.gethostname()
@@ -70,6 +71,5 @@ pd.DataFrame.dsort = descending_sort
 pd.Series.dsort = descending_sort
 pd.DataFrame.asort = ascending_sort
 pd.Series.asort = ascending_sort
-pd.DataFrame.left_merge_series =  lambda df, *args, **kwargs: left_merge_series(df, *args, **kwargs)
 
 %alias_magic h history -p "-l 20 -u -g"

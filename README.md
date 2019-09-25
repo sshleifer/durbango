@@ -48,13 +48,9 @@ Another useful magic property that I use for NLP is
 pd.DataFrame.where_text_contains = lambda df, pat: df[df['text'].str.contains(pat)]
 ```
 
-
-
 ### Pytorch
 Instead of writing `tensor.detach().cpu().numpy()` over and over, `to_arr` will do this.
 You can also make it a magic property of `torch.Tensor`
-
-
 
 ### Tensorboard -> DataFrame
 ```
@@ -63,10 +59,21 @@ parsed = parse_tf_events_file('/home/shleifer/conv_ai/tboard_logs/events.out.tfe
 This is a dataframe where each column is a metric and each row is an epoch.
 ```
 
+### Naming
+- `yhat`: column containing predictions
+- `y`: column containing targets
+- `output_df` dataframe with (at least) columns `y` and `yhat` for inspection and metrics.
+
+
+## Contributing
+- Run tests with `pytest tests/`, add new files to the `tests` directory.
+- if you want to use a library that is not already used in global scope and requires a pip install,
+consider importing it inside the functions that use it
+
 ### Docs ToDo:
 - imports.py
 - feature importance
 - `cross_val_predict_proba`
-- alerting: `send_sms` and `send_email`
+- `send_sms`
 - `count_df`
 - `dsort` and `asort`

@@ -1017,7 +1017,8 @@ def drop_zero_variance_cols(df):
     return df.loc[:, keep_col_mask]
 
 
-def groupby_softmax(df, grouper='right_id', agg_col='yhat'):
+def groupby_softmax(df, grouper, agg_col='yhat'):
+    """Transform df[agg_col] with softmax for each group."""
     log_yhat = np.exp(df[agg_col])
     sum_grp_yhat = df.groupby(grouper).log_yhat.transform('sum')
     return log_yhat / sum_grp_yhat

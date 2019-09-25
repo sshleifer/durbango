@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 from pandas.util.testing import assert_frame_equal, assert_series_equal
 
-from .nb_utils import _sort
-from .cross_val import cross_val_predict_proba_df, cross_val_predict_proba
+from durbango.nb_utils import _sort
+from durbango.cross_val import cross_val_predict_proba_df, cross_val_predict_proba
 from durbango.filesystem import get_git_rev
 from sklearn.linear_model import LinearRegression
 from sklearn.dummy import DummyRegressor, DummyClassifier

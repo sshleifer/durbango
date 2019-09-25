@@ -1,6 +1,4 @@
-
-
-
+"""For Gradient Boosted Tree/LightGBM Style models. Please do not add dependencies to global scope."""
 def shap_plot(my_model, val_X, class_num=1):
     """Create object that can calculate shap values"""
     import shap  # package used to calculate Shap values

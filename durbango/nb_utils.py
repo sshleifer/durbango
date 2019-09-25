@@ -8,7 +8,6 @@ import os
 import pandas as pd
 import re
 import time
-from sklearn.model_selection import KFold, StratifiedKFold
 from tqdm import tqdm, tqdm_notebook
 
 import logging
@@ -16,23 +15,22 @@ logger = logging.getLogger(__name__)
 from ipykernel.kernelapp import IPKernelApp
 def in_notebook(): return IPKernelApp.initialized()
 tqdm_nice = tqdm_notebook if in_notebook() else tqdm
-#TODO use this throughout!
 
-RANGE_PCT = np.arange(0, 1.01, .01)
-RANGE_DEC = np.arange(0, 1.01, .1)
-
-
+RANGE_PCT = np.arange(0, 1.01, .01)  # [0.00, 0.01, .02, .03,... to 1.0]
+RANGE_DEC = np.arange(0, 1.01, .1) #  # [0.00, 0.1, .2, .3, to 1.0]
 to_arr = lambda x: x.detach().cpu().numpy()
 
 def get_shape(x): return getattr(x, 'shape', len(x))
 
-def get_date_str(seconds=True):
+def get_date_str(seconds=True) -> str:
+    """Returns 2019-09-25-10:02:07, for example."""
     if seconds:
         return time.strftime('%Y-%m-%d-%H:%M:%S')
     else:
         return time.strftime('%Y-%m-%d-%H:%M')
 
 def wait_n_seconds(n):
+    """Useful for scheduling `sudo shutdown now`"""
     stop = time.time() + n
     while time.time() < stop:
         continue
@@ -87,10 +85,10 @@ def vals(dct): return list(dct.values())
 
 
 def parse_date_from_path(path, pattern=r'\d+', date_format=None):
-    '''Extract date string from path and return as pandas.Timestamp
+    ''' Extract date string from path (using regex) and return as pandas.Timestamp
 
     Args:
-        path: (str) path that contains date str in arbitrary format
+        path: (str) path that contains date_str in arbitrary format
         pattern: (str) default r'[digits]+'; regex pattern to find date string in path string
         date_format: (str) default None; date format passed to pd.to_datetime. if None,
                      try multiple formats, and raise ValueError if it can't find a match
@@ -103,7 +101,7 @@ def parse_date_from_path(path, pattern=r'\d+', date_format=None):
     return pd.to_datetime(date_str, format=date_format)
 
 
-# numerical utils (no pandas)
+##### Numerical Utils (no pandas) ##########
 def tlog(x, t, base=10):
     '''Symmetric truncated log transform centered around 0. Written by Tony Liu.
 
