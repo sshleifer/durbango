@@ -78,3 +78,10 @@ def get_git_rev(root='.'):
     except Exception:
         print(f'Couldnt find git rev error: {e}')
         return None
+
+def get_cur_branch(path='.'):
+    import git
+    repo = git.Git(path)
+    cands = [x.lstrip('* ') for x in repo.branch().split('\n') if x.startswith('*')]
+    assert len(cands) == 1
+    return cands[0]
