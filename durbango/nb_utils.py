@@ -381,3 +381,17 @@ def find_mode_len(metrics: dict) -> int:
 def ifnone(a, b):
     "`a` if `a` is not None, otherwise `b`."
     return b if a is None else a
+
+
+def requires_grad(m, set_val):
+    "If `set_val` is not set return `requires_grad` of first param, else set `requires_grad` on all params to `set_val`"
+    params = list(m.parameters())
+    if not params: return None
+    if set_val is None: return params[0].requires_grad
+    for p in params: p.requires_grad=set_val
+
+
+def trainable_params(m):
+    "Return list of trainable params in `m`."
+    res = filter(lambda p: p.requires_grad, m.parameters())
+    return res
