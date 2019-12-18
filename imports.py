@@ -28,11 +28,15 @@ import re
 from glob import glob
 import pickle
 import socket
-import torch
-from torch import nn
-import torch.nn.functional as F
-from IPython.lib.display import FileLink
+try:
+    import torch
+    from torch import nn
+    import torch.nn.functional as F
+    from durbango.torch_utils import  *
+except ImportError:
+    pass
 
+from IPython.lib.display import FileLink
 from durbango import *
 
 HOSTNAME = socket.gethostname()
