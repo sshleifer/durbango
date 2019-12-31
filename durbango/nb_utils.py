@@ -332,17 +332,17 @@ def _sort(data, by=None, ascending=False):
 descending_sort = _sort
 ascending_sort = lambda *args, **kwargs: _sort(*args, **kwargs, ascending=True)
 
-DEFAULT_FLATTEN_SEP = '_'
 
-def flatten(names, sep=DEFAULT_FLATTEN_SEP):
+def flat(lsts): return list(funcy.flatten(lsts))
+
+def sep_join(names, sep='_'):
     """turn iterable of strings into _ separated string, or return itself if string is passed."""
     return sep.join(map(str, names)) if is_iterable(names) else names
 
-
-def flatten_cols(arg_df, sep=DEFAULT_FLATTEN_SEP):
+def flatten_cols(arg_df, sep='_'):
     """Turn multiindex into single index. Does not mutate."""
     df = arg_df.copy()
-    df.columns = df.columns.map(lambda x: flatten(x, sep=sep))
+    df.columns = df.columns.map(lambda x: sep_join(x, sep=sep))
     return df
 
 

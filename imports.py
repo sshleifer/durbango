@@ -39,6 +39,10 @@ except ImportError:
 from IPython.lib.display import FileLink
 from durbango import *
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 HOSTNAME = socket.gethostname()
 mock_arr = np.array(range(25)).reshape(5,5)
 mock_df = pd.DataFrame(np.ones((5,5)), columns=['a', 'b', 'c', 'd', 'e'])
