@@ -20,7 +20,7 @@ def delegates(to=None, keep=False):
 def custom_dir(c, add): return dir(type(c)) + list(c.__dict__.keys()) + add
 
 class GetAttr:
-    "Base class for attr accesses in `self._xtra` passed down to `self.default`"
+    "Base class for attr accesses in `module._xtra` passed down to `module.default`"
     @property
     def _xtra(self): return [o for o in dir(self.default) if not o.startswith('_')]
     def __getattr__(self,k):

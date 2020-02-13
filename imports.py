@@ -56,6 +56,7 @@ from IPython.core.interactiveshell import InteractiveShell
 def in_notebook(): return IPKernelApp.initialized()
 def printmd(string): display(Markdown(string))
 import warnings
+from easydict import EasyDict as edict
 
 display(HTML("<style>.container { width:90% !important; }</style>"))
 
