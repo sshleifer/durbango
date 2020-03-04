@@ -352,6 +352,7 @@ def dct_differences(dct_a, dct_b):
     deltas = []
     for k in k1.union(k2):
         vala, valb = dct_a.get(k, SENTINEL), dct_b.get(k, SENTINEL)
+        # TODO(SS): nested dicts? Maybe better to dump to json and compare (after sorting keys!)
         if vala == valb:
             if (vala == SENTINEL and valb == SENTINEL): raise AssertionError('Adversarial Sentinel Input!')
         else:
