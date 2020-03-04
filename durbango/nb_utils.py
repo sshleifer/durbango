@@ -346,6 +346,19 @@ def flatten_cols(arg_df, sep='_'):
     return df
 
 
+def dct_differences(dct_a, dct_b):
+    SENTINEL = '__MissingKey'
+    k1, k2 = set(dct_a), set(dct_b) # just the keys
+    deltas = []
+    for k in k1.union(k2):
+        vala, valb = dct_a.get(k, SENTINEL), dct_b.get(k, SENTINEL)
+        if vala == valb:
+            if (vala == SENTINEL and valb == SENTINEL): raise AssertionError('Adversarial Sentinel Input!')
+        else:
+            deltas.append((k, vala, valb))
+    return deltas
+
+
 def add_oof_yhat_column(clf, xydf, feature_names, y_col, n_folds=3, new_col='oof_yhat'):
     assert new_col not in xydf.columns
     xydf['_fold'] = np.random.randint(0, n_folds, xydf.shape[0])
