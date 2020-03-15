@@ -50,7 +50,6 @@ class LoggingMixin:
         if not hasattr(self, 'logs'):
             self.reset_logs()
         log_df = pd.DataFrame(self.logs)
-        log_df['time_since_init'] = log_df['time'] - self.t_init
         return log_df
 
     def save_log_csv(self, path):
@@ -85,3 +84,4 @@ def assign_diffs(log_df):
     log_df['cpu_mem_delta'] = log_df['cpu_mem'].diff()
     log_df['gpu_mem_delta'] = log_df['gpu_mem'].diff()
     log_df['time_delta'] = log_df['time'].diff()
+    return log_df
