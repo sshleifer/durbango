@@ -5,6 +5,7 @@ from py3nvml import py3nvml
 import torch
 import psutil
 import pandas as pd
+import time
 
 
 def bytes_to_human_readable(memory_amount):
@@ -42,8 +43,10 @@ def collect_log_data(msg=''):
     print(long_msg)
     return record
 
-
 class LoggingMixin:
+    def __init__(self):
+        self.logs = []
+        self.t_init = time.time()
 
     def log_mem(self):
         self.logs.append(collect_log_data())
