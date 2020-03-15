@@ -42,8 +42,10 @@ class LoggingMixin:
         self.logs.append(self.collect_log_data(msg=msg, verbose=verbose))
 
     def reset_logs(self):
-        self.logs = []
-        self.t_init = time.time()
+        def resetter(module):
+            module.logs = []
+            module.t_init = time.time()
+        self.apply(resetter)
 
     @property
     def log_df(self):
