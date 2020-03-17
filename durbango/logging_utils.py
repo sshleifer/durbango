@@ -65,7 +65,7 @@ class LoggingMixin:
         record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                       time=time.time(),
                       msg=msg)
-        long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(gpu_mem)}'
+        long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(cpu_mem)}'
         record['long_msg'] = long_msg
         if verbose:
             print(long_msg)
