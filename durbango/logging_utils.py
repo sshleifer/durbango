@@ -36,7 +36,7 @@ def run_gpu_mem_counter():
 
 class LoggingMixin:
 
-    def log_mem(self, msg='', verbose=True):
+    def log_mem(self, msg='', verbose=False):
         if not hasattr(self, 'logs'):
             self.reset_logs()
         self.logs.append(self.collect_log_data(msg=msg, verbose=verbose))
@@ -86,6 +86,9 @@ class LoggingMixin:
     def summary(self):
         log_df = self.combine_logs()
         ranges = {x: log_df[x].max() - log_df[x].min() for x in ['cpu_mem', 'gpu_mem', 'time']}
+        ranges['cpu_mem'] = bytes_to_human_readable(ranges['cpu_mem'])
+        ranges['gpu_mem'] = bytes_to_human_readable(ranges['gpu_mem'])
+        ranges['time'] = round(ranges['time'], 4)
         return pd.Series(ranges)
 
 def assign_diffs(log_df):
