@@ -82,8 +82,16 @@ class LoggingMixin:
 
         return log_df.pipe(assign_diffs)
 
+    @property
+    def summary(self):
+        log_df = self.combine_logs()
+        ranges = {x: log_df[x].max() - log_df[x].min() for x in ['cpu_mem', 'gpu_mem', 'time']}
+        return pd.Series(ranges)
+
 def assign_diffs(log_df):
     log_df['cpu_mem_delta'] = log_df['cpu_mem'].diff()
     log_df['gpu_mem_delta'] = log_df['gpu_mem'].diff()
     log_df['time_delta'] = log_df['time'].diff()
     return log_df
+
+
