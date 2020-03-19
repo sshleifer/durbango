@@ -55,7 +55,7 @@ class LoggingMixin:
         return log_df
 
     def save_log_csv(self, path):
-        self.log_df.to_csv(path)
+        self.combine_logs().to_csv(path)
 
     @staticmethod
     def collect_log_data(msg='', verbose=False):
