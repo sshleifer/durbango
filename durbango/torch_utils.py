@@ -69,22 +69,20 @@ def find_names(obj):
 
 import gc
 
-
-def print_tensor_sizes():
-    results = {}
-    for obj in gc.get_objects():
+from .nb_utils import tqdm_nice
+from collections import defaultdict
+def print_tensor_sizes(ignore_names = ('obj', 'weight', 'bias')):
+    results = defaultdict(list)
+    ignore_names = ('obj', 'weight', 'bias')
+    #weights =
+    for obj in tqdm_nice(gc.get_objects()):
         try:
-            if not isinstance(obj, torch.Tensor):
-                continue
-            shapes = get_shapes(obj)
-            if shapes is None: continue
-            names = [x for x in find_names(obj) if x != 'obj']
-            if not names or names ==['obj']: continue
+            assert isinstance(obj, torch.Tensor)
+            ptr = obj.data_ptr()
+            shape = tuple(obj.shape)
+            names = [x for x in find_names(obj) if x not in ignore_names]
             for name in names:
-                results[name] = shapes
-
-
-
+                results[ptr].append((name, shape))
         except:
             pass
     return results
