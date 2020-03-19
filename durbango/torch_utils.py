@@ -80,9 +80,6 @@ def print_tensor_sizes():
             if shapes is None: continue
             names = [x for x in find_names(obj) if x != 'obj']
             if not names or names ==['obj']: continue
-            print(f'names: {names}')
-            print(f'shapes: {shapes}')
-            print(names, shapes)
             for name in names:
                 results[name] = shapes
 
