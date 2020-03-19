@@ -71,21 +71,23 @@ import gc
 
 from .nb_utils import tqdm_nice
 from collections import defaultdict
+import pandas as pd
 def print_tensor_sizes(ignore_names = ('obj', 'weight', 'bias')):
-    results = defaultdict(list)
+    results = []
     ignore_names = ('obj', 'weight', 'bias')
     #weights =
+    seen_ptrs = set()
     for obj in tqdm_nice(gc.get_objects()):
         try:
             assert isinstance(obj, torch.Tensor)
             ptr = obj.data_ptr()
-            shape = tuple(obj.shape)
+            if ptr in seen_ptrs: continue
             names = [x for x in find_names(obj) if x not in ignore_names]
             for name in names:
-                results[ptr].append((name, shape))
+                results.append(ptr, obj.numel(), name, obj.dtype, obj.device)
         except:
             pass
-    return results
+    return pd.DataFrame(results, columns=['data_ptr', 'numel', 'varname', 'data_type', 'device'])
 
 def same_storage(x, y):
     """
