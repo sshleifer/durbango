@@ -27,6 +27,15 @@ def get_shapes(x):
     else:
         return None
 
+import gc
+def print_tensor_sizes():
+    for obj in gc.get_objects():
+        try:
+            if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
+                print(type(obj), obj.size())
+        except:
+            pass
+
 def same_storage(x, y):
     """
     x = torch.arange(10)
