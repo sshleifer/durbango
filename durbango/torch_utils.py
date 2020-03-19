@@ -84,8 +84,8 @@ def print_tensor_sizes(ignore_names = ('obj', 'weight', 'bias')):
             if ptr in seen_ptrs: continue
             names = [x for x in find_names(obj) if x not in ignore_names]
             for name in names:
-                results.append(ptr, obj.numel(), name, obj.dtype, obj.device)
-        except:
+                results.append((ptr, obj.numel(), name, obj.dtype, obj.device))
+        except AssertionError:
             pass
     return pd.DataFrame(results, columns=['data_ptr', 'numel', 'varname', 'data_type', 'device'])
 
