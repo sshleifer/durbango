@@ -19,7 +19,7 @@ def chunks(lst, n):
 def get_shapes(x):
     """Recursive"""
     if hasattr(x, 'shape'):
-        return x.shape
+        return tuple(x.shape)
     elif isinstance(x, dict):
         return {k: get_shapes(v) for k,v in x.items()}
     elif is_iterable(x):
@@ -27,14 +27,17 @@ def get_shapes(x):
     else:
         return None
 
-import gc
-def print_tensor_sizes():
-    for obj in gc.get_objects():
-        try:
-            if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
-                print(type(obj), obj.size())
-        except:
-            pass
+def get_tensor_shapes_and_pointers(x):
+    """Recursive"""
+    if isinstance(x, torch.Tensor):
+        return (x.shape, x.data_ptr())
+    elif isinstance(x, dict):
+        return {k: get_shapes(v) for k,v in x.items()}
+    elif is_iterable(x):
+        return [get_shapes(v) for v in x]
+    else:
+        return None
+
 import sys
 def sizeof_fmt(num, suffix='B'):
     ''' by Fred Cirera,  https://stackoverflow.com/a/1094933/1870254, modified'''
@@ -62,6 +65,33 @@ def find_names(obj):
                 if v is obj:
                     obj_names.append(k)
     return obj_names
+
+
+import gc
+
+
+def print_tensor_sizes():
+    results = {}
+    for obj in gc.get_objects():
+        try:
+            if not isinstance(obj, torch.Tensor):
+                continue
+            shapes = get_shapes(obj)
+            if shapes is None: continue
+            names = [x for x in find_names(obj) if x != 'obj']
+            if not names or names ==['obj']: continue
+            print(f'names: {names}')
+            print(f'shapes: {shapes}')
+            print(names, shapes)
+            for name in names:
+                results[name] = shapes
+
+
+
+        except:
+            pass
+    return results
+
 def same_storage(x, y):
     """
     x = torch.arange(10)
