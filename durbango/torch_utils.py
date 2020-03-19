@@ -74,20 +74,20 @@ from collections import defaultdict
 import pandas as pd
 def print_tensor_sizes(ignore_names = ('obj', 'weight', 'bias')):
     results = []
-    ignore_names = ('obj', 'weight', 'bias')
-    #weights =
     seen_ptrs = set()
     for obj in tqdm_nice(gc.get_objects()):
         try:
             assert isinstance(obj, torch.Tensor)
             ptr = obj.data_ptr()
             if ptr in seen_ptrs: continue
+            seen_ptrs.add(ptr)
             names = [x for x in find_names(obj) if x not in ignore_names]
             for name in names:
-                results.append((ptr, obj.numel(), name, obj.dtype, obj.device))
+                results.append((name, obj.numel(), ptr,  obj.dtype, obj.device))
         except AssertionError:
             pass
-    return pd.DataFrame(results, columns=['data_ptr', 'numel', 'varname', 'data_type', 'device'])
+    colnames = ['varname', 'numel', 'data_ptr', 'data_type', 'device']
+    return pd.DataFrame(results, columns=colnames).sort_values('numel', ascending=False)
 
 def same_storage(x, y):
     """
