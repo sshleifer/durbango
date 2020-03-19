@@ -91,8 +91,9 @@ class LoggingMixin:
         log_df = self.combine_logs()
         ranges = {x: log_df[x].max() - log_df[x].min() for x in ['cpu_mem', 'gpu_mem', 'time']}
         ranges['cpu_mem'] = bytes_to_human_readable(ranges['cpu_mem'])
-        ranges['gpu_mem'] = bytes_to_human_readable(ranges['gpu_mem'])
-        ranges['time'] = round(ranges['time'], 4)
+        ranges['gpu_mem_chg'] = bytes_to_human_readable(ranges['gpu_mem'])
+        ranges['gpu_mem_peak'] = bytes_to_human_readable(log_df['gpu_mem'].max())
+        ranges['time'] = round(ranges['time'], 2)
         return pd.Series(ranges)
 
 def assign_diffs(log_df):
