@@ -26,3 +26,16 @@ def get_shapes(x):
         return [get_shapes(v) for v in x]
     else:
         return None
+
+def same_storage(x, y):
+    """
+    x = torch.arange(10)
+    y = x[1::2]
+    print(same_storage(x, y)) # prints True
+    z = y.clone()
+    print(same_storage(x, z)) # prints False
+    print(same_storage(y, z)) # prints False
+    """
+    x_ptrs = set(e.data_ptr() for e in x.view(-1))
+    y_ptrs = set(e.data_ptr() for e in y.view(-1))
+    return (x_ptrs <= y_ptrs) or (y_ptrs <= x_ptrs)
