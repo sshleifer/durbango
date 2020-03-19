@@ -70,6 +70,10 @@ class LoggingMixin:
         if verbose:
             print(long_msg)
         return record
+    def save_logs(self, path):
+        strang = '\n'.join(self.combine_logs().long_msg.values)
+        with open(path, 'w') as f:
+            f.write(strang)
 
     def combine_logs(self):
         LOGS = [self.log_df]
@@ -80,7 +84,7 @@ class LoggingMixin:
         self.apply(get_child_logs)
         log_df =  pd.concat(LOGS).sort_values('time')
 
-        return log_df.pipe(assign_diffs)
+        return log_df.pipe(assign_diffs).sort_values('time')
 
     @property
     def summary(self):
