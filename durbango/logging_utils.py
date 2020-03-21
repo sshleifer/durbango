@@ -103,3 +103,5 @@ def assign_diffs(log_df):
     return log_df
 
 
+class LoggingModule(torch.nn.Module, LoggingMixin):  # can replace nn.Module inheritance!
+    pass
