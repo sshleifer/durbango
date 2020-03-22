@@ -35,11 +35,16 @@ def run_gpu_mem_counter():
 
 
 class LoggingMixin:
-
+    t_init = 0
     def log_mem(self, msg='', verbose=False):
         if not hasattr(self, 'logs'):
             self.reset_logs()
-        self.logs.append(self.collect_log_data(msg=msg, verbose=verbose))
+        record = self.collect_log_data(msg=msg, verbose=False)
+        self.logs.append(record)
+        if verbose:
+            elapsed = record['time'] - self.t_init
+            print(f"{record['msg']}: {elapsed: .2f} ")
+
 
     def reset_logs(self):
         def resetter(module):
@@ -65,6 +70,7 @@ class LoggingMixin:
         record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                       time=time.time(),
                       msg=msg)
+
         long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(cpu_mem)}'
         record['long_msg'] = long_msg
         if verbose:
