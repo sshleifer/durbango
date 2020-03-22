@@ -59,9 +59,9 @@ class LoggingMixin:
 
     @staticmethod
     def collect_log_data(msg='', verbose=False):
-        process = psutil.Process(os.getpid())
-        cpu_mem = process.memory_info().rss
-        gpu_mem = run_gpu_mem_counter()
+        #process = psutil.Process(os.getpid())
+        cpu_mem = 0 # process.memory_info().rss
+        gpu_mem = 0#run_gpu_mem_counter()
         record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                       time=time.time(),
                       msg=msg)
