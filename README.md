@@ -8,6 +8,7 @@ pip install durbango
 ```
 
 
+
 ### Tutorials
 WIP
 
@@ -92,4 +93,11 @@ This is a dataframe where each column is a metric and each row is an epoch.
 - if you want to use a library that is not already used in global scope and requires a pip install,
 consider importing it inside the functions that use it
 
+
+### Build Instructions
+```bash
+# Change version in setup.py
+python setup.py sdist
+twine upload --skip-existing --repository pypi dist/*
+```
 
