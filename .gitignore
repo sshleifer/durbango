@@ -107,3 +107,4 @@ venv.bak/
 
 # mkdocs documentation
 /site
+ignore.txt

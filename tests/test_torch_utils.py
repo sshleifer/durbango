@@ -46,11 +46,12 @@ class TestLoggingUtils(unittest.TestCase):
         #infect_module_(model)
         model.apply(patch_module_with_memory_mixin)
         model.reset_logs()
-        model.log_mem()
+        #model.log_mem()
         model(test_tensor)
-        model.log_mem()
+        model.log_mem(verbose=True)
         log_df = model.combine_logs()
         print(model.summary)
+        model.save_logs('ignore.txt')
 
 
 

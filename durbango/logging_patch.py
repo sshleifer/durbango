@@ -26,7 +26,7 @@ def save_logs(self, path):
 
 
 def combine_logs(self):
-    LOGS = [self.log_df]
+    LOGS = []
     def get_child_logs(module):
         df = getattr(module, 'log_df', pd.DataFrame())
         LOGS.append(df)
@@ -47,10 +47,15 @@ def summary_fn(self):
     return pd.Series(ranges)
 
 from types import MethodType
+import warnings
 def patch_module_with_memory_mixin(model):
     """create logging methods using MethodType"""
     _method = lambda f: MethodType(f, model)
-    model.reset_logs = _method(reset_logs)
+    try:
+        model.reset_logs = _method(reset_logs)
+    except AttributeError:
+        warnings.warn('Cant patch attribute reset_logs, assuming LoggingMixin already being used')
+
     model.save_logs = _method(save_logs)
     model.save_log_csv = _method(save_log_csv)
     #model.log_mem = _method(log_mem)
