@@ -31,6 +31,11 @@ def combine_logs(self):
         df = getattr(module, 'log_df', pd.DataFrame())
         LOGS.append(df)
 
+    self.apply(get_child_logs)
+    log_df = pd.concat(LOGS).sort_values('time')
+
+    return log_df.pipe(assign_diffs).sort_values('time')
+
 
 def summary_fn(self):
     log_df = self.combine_logs()
