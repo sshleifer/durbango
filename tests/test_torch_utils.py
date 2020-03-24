@@ -50,7 +50,7 @@ class TestLoggingUtils(unittest.TestCase):
         model(test_tensor)
         model.log_mem()
         log_df = model.combine_logs()
-        model.summary()
+        model.summary
 
 
 
