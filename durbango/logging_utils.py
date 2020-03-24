@@ -12,7 +12,7 @@ import psutil
 def collect_log_data(msg='', verbose=False):
     process = psutil.Process(os.getpid())
     cpu_mem = process.memory_info().rss
-    gpu_mem = run_gpu_mem_counter()
+    gpu_mem = run_gpu_mem_counter_fast()
     record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                   time=time.time(),
                   msg=msg)

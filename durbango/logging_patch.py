@@ -1,7 +1,8 @@
 import os
 import time
-
+import torch
 import pandas as pd
+import py3nvml
 
 from .logging_utils import bytes_to_human_readable, collect_log_data, assign_diffs
 
@@ -71,8 +72,6 @@ def log_df_fn(self):
         self.reset_logs()
     log_df = pd.DataFrame(self.logs)
     return log_df
-
-
 
 
 def save_log_csv(self, path):
