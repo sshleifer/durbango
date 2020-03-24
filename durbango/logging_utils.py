@@ -12,7 +12,7 @@ import psutil
 def collect_log_data(msg='', verbose=False):
     process = psutil.Process(os.getpid())
     cpu_mem = process.memory_info().rss
-    gpu_mem = run_gpu_mem_counter(do_shutdown=False)
+    gpu_mem = run_gpu_mem_counter(do_shutdown=True)
     record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                   time=time.time(),
                   msg=msg)
@@ -41,7 +41,8 @@ def bytes_to_human_readable(memory_amount):
 def run_gpu_mem_counter(do_shutdown=False):
     # Sum used memory for all GPUs
     if not torch.cuda.is_available(): return 0
-    py3nvml.nvmlInit()
+    if do_shutdown:
+        py3nvml.nvmlInit()
     devices = list(range(py3nvml.nvmlDeviceGetCount())) #if gpus_to_trace is None else gpus_to_trace
     gpu_mem = 0
     for i in devices:
