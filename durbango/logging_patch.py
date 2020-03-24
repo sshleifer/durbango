@@ -41,11 +41,12 @@ def combine_logs(self):
 def summary_fn(self):
     log_df = self.combine_logs()
     ranges = {x: log_df[x].max() - log_df[x].min() for x in ['cpu_mem', 'gpu_mem', 'time']}
-    ranges['cpu_mem'] = bytes_to_human_readable(ranges['cpu_mem'])
+    ranges['cpu_mem_chg'] = bytes_to_human_readable(ranges['cpu_mem'])
     ranges['gpu_mem_chg'] = bytes_to_human_readable(ranges['gpu_mem'])
-    ranges['gpu_mem_peak'] = bytes_to_human_readable(log_df['gpu_mem'].max())
-    ranges['time'] = round(ranges['time'], 2)
-    return pd.Series(ranges)
+    ranges['gpu_mem_max'] = bytes_to_human_readable(log_df['gpu_mem'].max())
+    ranges['gpu_mem_min'] = bytes_to_human_readable(log_df['gpu_mem'].max())
+    ranges['time_second'] = round(ranges['time'], 2)
+    return pd.Series(ranges).drop(['gpu_mem', 'cpu_mem'])
 
 from types import MethodType
 import warnings
