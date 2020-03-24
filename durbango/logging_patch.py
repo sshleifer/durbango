@@ -56,8 +56,8 @@ def patch_module_with_memory_mixin(model):
     #model.log_mem = _method(log_mem)
     cls = type(model)
     cls.log_df = property(log_df_fn)
-    cls.log_mem = _method(log_mem)
-    model.summary = property(summary_fn)
+    model.log_mem = _method(log_mem)
+    cls.summary = property(summary_fn)
     model.combine_logs = _method(combine_logs)
 
 

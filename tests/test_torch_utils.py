@@ -8,7 +8,7 @@ class Layer(torch.nn.Module):
         self.w = torch.nn.Linear(1,1)
     def forward(self, x):
         self.w(x)
-        self.log_mem(f'shape:{x.shape}')
+        #self.log_mem(f'shape:{x.shape}')
         return x
 
 
@@ -50,7 +50,7 @@ class TestLoggingUtils(unittest.TestCase):
         model(test_tensor)
         model.log_mem()
         log_df = model.combine_logs()
-        model.summary
+        print(model.summary)
 
 
 
