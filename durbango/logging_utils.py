@@ -12,7 +12,7 @@ import psutil
 def collect_log_data(msg='', verbose=False):
     process = psutil.Process(os.getpid())
     cpu_mem = process.memory_info().rss
-    gpu_mem = run_gpu_mem_counter_fast()
+    gpu_mem = run_gpu_mem_counter(do_shutdown=False)
     record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                   time=time.time(),
                   msg=msg)
@@ -38,7 +38,7 @@ def bytes_to_human_readable(memory_amount):
     return "{:.3f}TB".format(memory_amount)
 
 
-def run_gpu_mem_counter():
+def run_gpu_mem_counter(do_shutdown=False):
     # Sum used memory for all GPUs
     if not torch.cuda.is_available(): return 0
     py3nvml.nvmlInit()
@@ -48,19 +48,8 @@ def run_gpu_mem_counter():
         handle = py3nvml.nvmlDeviceGetHandleByIndex(i)
         meminfo = py3nvml.nvmlDeviceGetMemoryInfo(handle)
         gpu_mem += meminfo.used
-    py3nvml.nvmlShutdown()
-    return gpu_mem
-
-def run_gpu_mem_counter_fast():
-    """Assume pynvml.init already called"""
-    # Sum used memory for all GPUs
-    if not torch.cuda.is_available(): return 0
-    devices = list(range(py3nvml.nvmlDeviceGetCount())) #if gpus_to_trace is None else gpus_to_trace
-    gpu_mem = 0
-    for i in devices:
-        handle = py3nvml.nvmlDeviceGetHandleByIndex(i)
-        meminfo = py3nvml.nvmlDeviceGetMemoryInfo(handle)
-        gpu_mem += meminfo.used
+    if do_shutdown:
+        py3nvml.nvmlShutdown()
     return gpu_mem
 
 
