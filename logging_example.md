@@ -19,7 +19,7 @@ done: GPU: 7.974GB CPU: 5.848GB
 ```
 
 ### Suggested Workflow
-Get git setup to checkout PRs by number
+1) Get git setup to checkout PRs by number
 my `.git/config` (for my fork) looks like this:
 ```
 [remote "upstream"]
@@ -29,7 +29,9 @@ my `.git/config` (for my fork) looks like this:
 ```
 ([inspired by this](https://gist.github.com/piscisaureus/3342247))
 
-Then checkout PRs and the testing script and run:
+
+2) checkout PRs + run the testing script:
+
 ```bash
 git checkout pr/3370 
 git checkout mem-prof-bart tests/test_bart_memory.py small_test.source
@@ -42,7 +44,7 @@ e.g. for `forward`
 pytest --tb=short tests/test_bart_memory.py -s -k hf_fwd
 ```
 or for `generate`
-```
+```bash
 pytest --tb=short tests/test_bart_memory.py -s -k hf_short_gen
 ```
 (hf stands for `huggingface` there are equivalent `fs_` tests for `fairseq`).
