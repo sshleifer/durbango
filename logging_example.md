@@ -1,7 +1,7 @@
 ### Setup
 
 ```bash
-pip install durbango
+pip install durbango # should be >= v0.3
 cd ~/transformers # wherever your fork is, I'm assuming upstream is the real repo
 git fetch upstream
 git checkout mem-prof-bart
