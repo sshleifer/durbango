@@ -2,7 +2,6 @@ import os
 import time
 import torch
 import pandas as pd
-import py3nvml
 
 from .logging_utils import bytes_to_human_readable, collect_log_data, assign_diffs
 

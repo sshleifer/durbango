@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='durbango',
-    version='0.23',
+    version='0.3',
     packages=['durbango'],
     url='',
     license='',
