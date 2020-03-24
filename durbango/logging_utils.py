@@ -7,7 +7,26 @@ import psutil
 import pandas as pd
 import time
 import os
+import psutil
 
+def collect_log_data(msg='', verbose=False):
+    process = psutil.Process(os.getpid())
+    cpu_mem = process.memory_info().rss
+    gpu_mem = run_gpu_mem_counter()
+    record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
+                  time=time.time(),
+                  msg=msg)
+    long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(cpu_mem)}'
+    record['long_msg'] = long_msg
+    if verbose:
+        print(long_msg)
+    return record
+
+def assign_diffs(log_df):
+    log_df['cpu_mem_delta'] = log_df['cpu_mem'].diff()
+    log_df['gpu_mem_delta'] = log_df['gpu_mem'].diff()
+    log_df['time_delta'] = log_df['time'].diff()
+    return log_df
 
 def bytes_to_human_readable(memory_amount):
     """ Utility to convert a number of bytes (int) in a human readable string (with units)
@@ -32,20 +51,34 @@ def run_gpu_mem_counter():
     py3nvml.nvmlShutdown()
     return gpu_mem
 
+def run_gpu_mem_counter_fast():
+    """Assume pynvml.init already called"""
+    # Sum used memory for all GPUs
+    if not torch.cuda.is_available(): return 0
+    devices = list(range(py3nvml.nvmlDeviceGetCount())) #if gpus_to_trace is None else gpus_to_trace
+    gpu_mem = 0
+    for i in devices:
+        handle = py3nvml.nvmlDeviceGetHandleByIndex(i)
+        meminfo = py3nvml.nvmlDeviceGetMemoryInfo(handle)
+        gpu_mem += meminfo.used
+    return gpu_mem
 
 
-class LoggingMixin:
+class LoggingMixin(object):
 
     def log_mem(self, msg='', verbose=False):
         if not hasattr(self, 'logs'):
+            #py3nvml.nvmlInit()
             self.reset_logs()
-        self.logs.append(self.collect_log_data(msg=msg, verbose=verbose))
+        self.logs.append(collect_log_data(msg=msg, verbose=verbose))
 
     def reset_logs(self):
+
         def resetter(module):
             module.logs = []
             module.t_init = time.time()
         self.apply(resetter)
+        #py3nvml.nvmlInit()
 
     @property
     def log_df(self):
@@ -57,19 +90,6 @@ class LoggingMixin:
     def save_log_csv(self, path):
         self.combine_logs().to_csv(path)
 
-    @staticmethod
-    def collect_log_data(msg='', verbose=False):
-        process = psutil.Process(os.getpid())
-        cpu_mem = process.memory_info().rss
-        gpu_mem = run_gpu_mem_counter()
-        record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
-                      time=time.time(),
-                      msg=msg)
-        long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(cpu_mem)}'
-        record['long_msg'] = long_msg
-        if verbose:
-            print(long_msg)
-        return record
     def save_logs(self, path):
         strang = '\n'.join(self.combine_logs().long_msg.values)
         with open(path, 'w') as f:
@@ -96,11 +116,34 @@ class LoggingMixin:
         ranges['time'] = round(ranges['time'], 2)
         return pd.Series(ranges)
 
-def assign_diffs(log_df):
-    log_df['cpu_mem_delta'] = log_df['cpu_mem'].diff()
-    log_df['gpu_mem_delta'] = log_df['gpu_mem'].diff()
-    log_df['time_delta'] = log_df['time'].diff()
-    return log_df
+
+def combine_logs(self):
+    LOGS = [self.log_df]
+    def get_child_logs(module):
+        df = getattr(module, 'log_df', pd.DataFrame())
+        LOGS.append(df)
+
+    self.apply(get_child_logs)
+    log_df =  pd.concat(LOGS).sort_values('time')
+
+    return log_df.pipe(assign_diffs).sort_values('time')
+from functools import wraps # This convenience func preserves name and docstring
+
+# class A:
+#     pass
+# from types import MethodType
+# def add_method(cls):
+#     def decorator(func):
+#         @wraps(func)
+#         def wrapper(self, *args, **kwargs):
+#             return func(*args, **kwargs)
+#         setattr(cls, func.__name__, wrapper)
+#         # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
+#         return func # returning func means func can still be used normally
+#     return decorator
+
+
+
 
 
 class LoggingModule(torch.nn.Module, LoggingMixin):  # can replace nn.Module inheritance!
