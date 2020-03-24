@@ -44,7 +44,7 @@ def summary_fn(self):
     ranges['cpu_mem_chg'] = bytes_to_human_readable(ranges['cpu_mem'])
     ranges['gpu_mem_chg'] = bytes_to_human_readable(ranges['gpu_mem'])
     ranges['gpu_mem_max'] = bytes_to_human_readable(log_df['gpu_mem'].max())
-    ranges['gpu_mem_min'] = bytes_to_human_readable(log_df['gpu_mem'].max())
+    ranges['gpu_mem_min'] = bytes_to_human_readable(log_df['gpu_mem'].min())
     ranges['time_second'] = round(ranges['time'], 2)
     return pd.Series(ranges).drop(['gpu_mem', 'cpu_mem'])
 
