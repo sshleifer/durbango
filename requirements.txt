@@ -3,3 +3,4 @@ pandas
 funcy
 ipykernel
 psutil
+tqdm
