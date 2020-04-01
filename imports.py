@@ -70,7 +70,8 @@ try:
         from PIL import Image
 except ImportError:
     pass
-
+from transformers import *
+from transformers.modeling_bart import *
 
 Path.ls =  lambda self: sorted(list(self.iterdir()))
 ParameterGrid.l = property(lambda self: list(self))

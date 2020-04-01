@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
-from pandas.util.testing import assert_frame_equal, assert_series_equal
+from pandas.testing import assert_frame_equal, assert_series_equal
 
 from durbango import *  # want to make sure star import doesn't break
 from durbango.nb_utils import _sort

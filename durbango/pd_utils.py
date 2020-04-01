@@ -9,7 +9,7 @@ import pandas as pd
 import re
 import warnings
 from collections import OrderedDict
-from pandas.util.testing import assert_frame_equal
+from pandas.testing import assert_frame_equal
 
 from durbango.nb_utils import to_list
 
