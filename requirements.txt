@@ -4,3 +4,4 @@ funcy
 ipykernel
 psutil
 tqdm
+py3nvml
