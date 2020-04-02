@@ -101,3 +101,17 @@ def same_storage(x, y):
     x_ptrs = set(e.data_ptr() for e in x.view(-1))
     y_ptrs = set(e.data_ptr() for e in y.view(-1))
     return (x_ptrs <= y_ptrs) or (y_ptrs <= x_ptrs)
+
+
+def compare_state_dict(dct_a, dct_b):
+    SENTINEL = torch.zeros(3)
+    k1, k2 = set(dct_a), set(dct_b) # just the keys
+    deltas = []
+    for k in tqdm_nice(k1.union(k2)):
+        vala, valb = dct_a.get(k, SENTINEL), dct_b.get(k, SENTINEL)
+        if vala.shape == valb.shape and torch.eq(vala, valb).all():
+            continue
+        else:
+            deltas.append((k, vala.numel(), valb.numel()))
+    return pd.DataFrame(deltas, columns=['key', 'numel_a', 'numel_b'])
+
