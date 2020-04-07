@@ -409,3 +409,15 @@ def trainable_params(m):
     "Return list of trainable params in `m`."
     res = filter(lambda p: p.requires_grad, m.parameters())
     return res
+
+
+def remove_prefix(text: str, prefix: str):
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text  # or whatever
+
+
+def remove_suffix(text: str, suffix: str):
+    if text.endswith(suffix):
+        return text[:-len(suffix)]
+    return text  # or whatever
