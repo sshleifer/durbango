@@ -1024,3 +1024,8 @@ def groupby_softmax(df, grouper, agg_col='yhat'):
     log_yhat = np.exp(df[agg_col])
     sum_grp_yhat = df.groupby(grouper).log_yhat.transform('sum')
     return log_yhat / sum_grp_yhat
+
+
+def add_totals(df, axis=1, name='total'):
+    totals = df.sum(axis=axis).to_frame(name)
+    return pd.concat([df, totals], axis=axis)

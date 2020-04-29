@@ -1,7 +1,10 @@
 import time
 
 #from durbango.torch_utils import bytes_to_human_readable
-from py3nvml import py3nvml
+try:
+    from py3nvml import py3nvml
+except ModuleNotFoundError:
+    pass
 import torch
 import psutil
 import pandas as pd

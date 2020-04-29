@@ -421,3 +421,18 @@ def remove_suffix(text: str, suffix: str):
     if text.endswith(suffix):
         return text[:-len(suffix)]
     return text  # or whatever
+
+def load_json(p):
+    import json
+    return json.load(open(p))
+
+
+def compare_dicts(dct_a, dct_b):
+    SENTINEL = -4.2
+    k1, k2 = set(dct_a), set(dct_b)  # just the keys
+    deltas = []
+    for k in tqdm_nice(k1.union(k2)):
+        vala, valb = dct_a.get(k, SENTINEL), dct_b.get(k, SENTINEL)
+        if vala == valb: continue
+        else: deltas.append((k, vala, valb))
+    return deltas #pd.DataFrame(deltas, columns=['key', 'numel_a', 'numel_b'])
