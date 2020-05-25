@@ -13,10 +13,10 @@ import os
 import psutil
 
 def collect_log_data(msg='', verbose=False, do_mem=False):
-    process = psutil.Process(os.getpid())
-    cpu_mem = process.memory_info().rss
-    gpu_mem = run_gpu_mem_counter(do_shutdown=True)
     if do_mem:
+        process = psutil.Process(os.getpid())
+        cpu_mem = process.memory_info().rss
+        gpu_mem = run_gpu_mem_counter(do_shutdown=True)
         record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                   time=time.time(),
                   msg=msg)
