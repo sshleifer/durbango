@@ -26,10 +26,10 @@ def collect_log_data(msg='', verbose=False, do_mem=False):
         record = dict(cpu_mem=0, gpu_mem=0,
                       time=time.time(),
                       msg=msg)
-    long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(cpu_mem)}'
-    record['long_msg'] = long_msg
-    if verbose:
-        print(long_msg)
+    # long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(cpu_mem)}'
+    # record['long_msg'] = long_msg
+    # if verbose:
+    #     print(long_msg)
     return record
 
 def assign_diffs(log_df):
