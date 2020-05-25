@@ -12,13 +12,18 @@ import time
 import os
 import psutil
 
-def collect_log_data(msg='', verbose=False):
+def collect_log_data(msg='', verbose=False, do_mem=False):
     process = psutil.Process(os.getpid())
     cpu_mem = process.memory_info().rss
     gpu_mem = run_gpu_mem_counter(do_shutdown=True)
-    record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
+    if do_mem:
+        record = dict(cpu_mem=cpu_mem, gpu_mem=gpu_mem,
                   time=time.time(),
                   msg=msg)
+    else:
+        record = dict(cpu_mem=0, gpu_mem=0,
+                      time=time.time(),
+                      msg=msg)
     long_msg = f'{msg}: GPU: {bytes_to_human_readable(gpu_mem)} CPU: {bytes_to_human_readable(cpu_mem)}'
     record['long_msg'] = long_msg
     if verbose:
@@ -57,7 +62,7 @@ def run_gpu_mem_counter(do_shutdown=False):
     return gpu_mem
 
 
-class LoggingMixin(object):
+class LoggingMixin:
 
     def log_mem(self, msg='', verbose=False):
         if not hasattr(self, 'logs'):
