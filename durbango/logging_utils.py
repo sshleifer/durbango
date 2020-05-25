@@ -21,6 +21,8 @@ def collect_log_data(msg='', verbose=False, do_mem=False):
                   time=time.time(),
                   msg=msg)
     else:
+        cpu_mem = 0
+        gpu_mem = 0
         record = dict(cpu_mem=0, gpu_mem=0,
                       time=time.time(),
                       msg=msg)
