@@ -72,6 +72,11 @@ except ImportError:
     pass
 from transformers import *
 from transformers.modeling_bart import *
+from transformers.modeling_marian import *
+from transformers.convert_marian_to_pytorch import *
+
+HELSINKI_PREFIX = 'Helsinki-NLP/opus-mt-'
+ORG = 'Helsinki-NLP'
 
 Path.ls =  lambda self: sorted(list(self.iterdir()))
 ParameterGrid.l = property(lambda self: list(self))

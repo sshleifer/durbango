@@ -422,6 +422,7 @@ def remove_suffix(text: str, suffix: str):
         return text[:-len(suffix)]
     return text  # or whatever
 
+
 def load_json(p):
     import json
     return json.load(open(p))

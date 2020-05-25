@@ -115,3 +115,12 @@ def compare_state_dict(dct_a, dct_b):
             deltas.append((k, vala.numel(), valb.numel()))
     return pd.DataFrame(deltas, columns=['key', 'numel_a', 'numel_b'])
 
+def log_tensor(msg, x):
+    sq = x.squeeze()
+    if sq.ndim == 2:
+        slice = x[:3, :4]
+    elif sq.ndim == 3:
+        slice = x[:, 0, :6]
+    else:
+        slice = x[:5]
+    print(f"{msg}: shape: {x.shape} min: {x.min(): .4f} max: {x.max(): .4f} slice: {slice}")
