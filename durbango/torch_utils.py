@@ -16,6 +16,13 @@ def chunks(lst, n):
 
 
 
+def avg_checkpoints(sds):
+    new_sd = {}
+    for k in sds[0].keys():
+        new_sd[k] = torch.mean([sd[k] for sd in sds])
+    return new_sd
+
+
 def get_shapes(x):
     """Recursive"""
     if hasattr(x, 'shape'):
