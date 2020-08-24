@@ -422,11 +422,15 @@ def remove_suffix(text: str, suffix: str):
         return text[:-len(suffix)]
     return text  # or whatever
 
-
+import json
 def load_json(p):
     import json
     return json.load(open(p))
 
+def save_json(content, path):
+    import json
+    with open(path, "w") as f:
+        json.dump(content, f, indent=4)
 
 def compare_dicts(dct_a, dct_b):
     SENTINEL = -4.2
