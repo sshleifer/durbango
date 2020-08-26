@@ -80,3 +80,8 @@ def get_cur_branch(path='.'):
     cands = [x.lstrip('* ') for x in repo.branch().split('\n') if x.startswith('*')]
     assert len(cands) == 1
     return cands[0]
+
+
+def read_txt_file(path) -> list:
+    lns = Path(path).open().read().split('\n')
+    return lns
