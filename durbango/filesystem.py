@@ -85,3 +85,14 @@ def get_cur_branch(path='.'):
 def read_txt_file(path) -> list:
     lns = Path(path).open().read().split('\n')
     return lns
+
+punc = set(["\"", ".", "?", "!"])  # Better?
+def ln_ends_with_punc(x:str) ->bool:
+    return x.strip()[-1] in punc if x.strip() else False
+
+
+def trunc_frac(txt_file):
+    """What fraction of a txt files lines dont end in punctutation."""
+    import numpy as np
+    examples = read_txt_file(txt_file)
+    return 1-np.mean([ln_ends_with_punc(x) for x in examples])
