@@ -86,9 +86,9 @@ def read_txt_file(path) -> list:
     lns = Path(path).open().read().split('\n')
     return lns
 
-punc = set(["\"", ".", "?", "!"])  # Better?
+import string
 def ln_ends_with_punc(x:str) ->bool:
-    return x.strip()[-1] in punc if x.strip() else False
+    return x.strip()[-1] in string.punctuation if x.strip() else False
 
 
 def trunc_frac(txt_file):
