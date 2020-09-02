@@ -131,3 +131,12 @@ def log_tensor(msg, x):
     else:
         slice = x[:5]
     print(f"{msg}: shape: {x.shape} min: {x.min(): .4f} max: {x.max(): .4f} slice: {slice}")
+
+from .nb_utils import remove_prefix
+def convert_pl_to_hf(pl_ckpt_path, hf_model, save_path):
+    state_dict = {remove_prefix(k, 'model.'): v for k, v in
+           torch.load(pl_ckpt_path, map_location='cpu')['state_dict'].items()}
+    missing, unexpected = hf_model.load_state_dict(state_dict, strict=False)
+    assert not missing, f'missing keys: {missing}'
+    hf_model.save_pretrained(save_path)
+
