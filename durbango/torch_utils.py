@@ -139,4 +139,3 @@ def convert_pl_to_hf(pl_ckpt_path, hf_model, save_path):
     missing, unexpected = hf_model.load_state_dict(state_dict, strict=False)
     assert not missing, f'missing keys: {missing}'
     hf_model.save_pretrained(save_path)
-
