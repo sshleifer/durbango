@@ -86,6 +86,12 @@ def read_txt_file(path) -> list:
     lns = Path(path).open().read().split('\n')
     return lns
 
+def write_txt_file(ordered_tgt, path):
+    f = Path(path).open('w')
+    for ln in ordered_tgt:
+        f.write(ln + '\n')
+        f.flush()
+
 import string
 def ln_ends_with_punc(x:str) ->bool:
     return x.strip()[-1] in string.punctuation if x.strip() else False
