@@ -5,3 +5,7 @@ ipykernel
 psutil
 tqdm
 py3nvml
+jupyter
+fire
+scikit-learn
+tabulate
