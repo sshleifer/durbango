@@ -20,17 +20,18 @@ def make_sweep_table(pattern, csv_path=None, keep_cols=None, sort_col=None) -> N
         csv_path: (str) where to save if suffix is .md will save markdown, otherwise csv.
     """
     records = []
-    for f in glob(pattern):
+    matches = list(glob(pattern))
+    for f in matches:
         #import ipdb; ipdb.set_trace()
         #if len(lns)
         try:
             record = read_log_json_file(f)
             record['path'] = Path(f).parent.name
+            records.append(record)
         except json.JSONDecodeError:
             print(f'Failed on {f}')
-
-        records.append(record)
-    
+    if len(records) == 0:
+        raise ValueError(f'None of the {len(matches)} log files are ready to be parsed.')
     df = pd.DataFrame(records)
     #import ipdb; ipdb.set_trace()
     # Improvements: remove common prefix, suffix from path
