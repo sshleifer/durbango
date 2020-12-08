@@ -144,3 +144,14 @@ def convert_pl_to_hf(pl_ckpt_path, hf_model, save_path):
 def get_src_lens(tok, examples):
     src_lens = tok(examples, padding='longest', truncation=True, return_tensors='pt').input_ids.ne(tok.pad_token_id).sum(1)
     return src_lens
+
+
+def count_trainable_parameters(model):
+    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+    params = sum([np.prod(p.size()) for p in model_parameters])
+    return params
+
+def count_parameters(model):
+    model_parameters = model.parameters()
+    params = sum([np.prod(p.size()) for p in model_parameters])
+    return params

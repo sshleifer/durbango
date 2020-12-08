@@ -97,7 +97,7 @@ def make_metadata_table(pattern) -> pd.DataFrame:
     int_cols = ['d', 'ffn']
     tab[int_cols] = tab[int_cols].astype(int)
     tab = tab.fillna(False)
-    return tab[tab.populated].drop(['populated', 'bsz', 'ngpu1', 'grid'], 1)
+    return tab[tab.populated].drop(['populated', 'bsz', 'ngpu1', 'grid', 'ffn_grid'], 1,errors='ignore')
 
 
 def make_sweep_table(pattern, csv_path=None, keep_cols=None, sort_col=None, interactive=False, add_metadata=False) -> None:
