@@ -56,7 +56,6 @@ from IPython.core.interactiveshell import InteractiveShell
 def in_notebook(): return IPKernelApp.initialized()
 def printmd(string): display(Markdown(string))
 import warnings
-from easydict import EasyDict as edict
 
 display(HTML("<style>.container { width:90% !important; }</style>"))
 
@@ -70,13 +69,6 @@ try:
         from PIL import Image
 except ImportError:
     pass
-from transformers import *
-from transformers.modeling_bart import *
-from transformers.modeling_marian import *
-from transformers.convert_marian_to_pytorch import *
-
-HELSINKI_PREFIX = 'Helsinki-NLP/opus-mt-'
-ORG = 'Helsinki-NLP'
 
 Path.ls =  lambda self: sorted(list(self.iterdir()))
 ParameterGrid.l = property(lambda self: list(self))
