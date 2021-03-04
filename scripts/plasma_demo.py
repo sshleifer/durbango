@@ -9,13 +9,13 @@ GB200 = (1024 ** 3) * 200
 DEFAULT_PLASMA_PATH = '/tmp/plasma'
 import hashlib
 from filelock import FileLock
+import time
 
 class PlasmaView:
     def __init__(
         self, array, split_path: str, object_num: int, path=DEFAULT_PLASMA_PATH
     ):
         assert split_path is not None
-
         self.path = path
         self.split_path = split_path
         self.object_id = self.get_object_id(self.split_path, object_num)
@@ -77,14 +77,22 @@ class PlasmaView:
     def __getstate__(self):
         """Called on pickle save, I believe"""
         self.client.disconnect()
+        self.log('get state')
+        if getattr(self, '_client', None) is not None:
+            self._client.disconnect()
+            self._client = None
+
         state = self.__dict__.copy()
         state["_client"] = None
+        assert 'object_id' in state
         return state
 
-    def __setstate__(self, state):
-        """Called on pickle load, I believe"""
-        self.__dict__.update(state)
-        # self.client = plasma.connect(self.path, num_retries=200)
+    # def __setstate__(self, state):
+    #     """Called on pickle load, I believe"""
+    #
+    #     self.__dict__.update(state)
+    #     self.log('set state')
+    #     # self.client = plasma.connect(self.path, num_retries=200)
 
     def __del__(self):
         if self._client is not None: self._client.disconnect()
@@ -122,15 +130,16 @@ class PlasmaDataset(Dataset):
 def train(num_workers):
     dtrain = np.random.rand(1000, 10)
     dval = np.random.rand(100, 10)
+    t0 = time.time()
     train_ds = PlasmaDataset(dtrain, 'train')
     val_ds = PlasmaDataset(dval, 'val')
     train_dl = DataLoader(train_ds, batch_size=4, num_workers=num_workers)
     val_dl = DataLoader(val_ds, batch_size=4, num_workers=num_workers)
     for batch in train_dl:
-        lens = len(batch)
+        lens = batch[0][0]
     for batch in val_dl:
-        lens = len(batch)
-    print('DONE')
+        lens = batch[0][0]
+    print(f'DONE: {time.time() - t0:.2f} seconds')
 
 
 def main():
