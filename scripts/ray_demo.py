@@ -42,10 +42,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-workers", default=0, type=int)
     args = parser.parse_args()
-    #parser.add_argument("--dimension", type=int, default=1024, help="Size of each key")
     train(args.num_workers)
     ray.shutdown()
-    #server.kill()
 
 
 if __name__ == '__main__':
