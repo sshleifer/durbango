@@ -76,27 +76,26 @@ class PlasmaView:
 
     def __getstate__(self):
         """Called on pickle save, I believe"""
-        self.client.disconnect()
         self.log('get state')
-        if getattr(self, '_client', None) is not None:
-            self._client.disconnect()
-            self._client = None
+        self.disconnect()
 
         state = self.__dict__.copy()
         state["_client"] = None
         assert 'object_id' in state
         return state
 
-    # def __setstate__(self, state):
-    #     """Called on pickle load, I believe"""
-    #
-    #     self.__dict__.update(state)
-    #     self.log('set state')
-    #     # self.client = plasma.connect(self.path, num_retries=200)
+    def __setstate__(self, state):
+        """Called on pickle load, I believe"""
+        self.__dict__.update(state)
+        # self.client = plasma.connect(self.path, num_retries=200)
 
     def __del__(self):
-        if self._client is not None: self._client.disconnect()
-        self._client = None
+        self.disconnect()
+
+    def disconnect(self):
+        if self._client is not None:
+            self._client.disconnect()
+            self._client = None
 
     def __len__(self):
         """Save reads by caching len"""
