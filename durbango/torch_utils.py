@@ -14,6 +14,11 @@ def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
+def print_shape(obj):
+    if torch.is_tensor(obj): return obj.shape
+    elif isinstance(obj, (list, tuple)): return [print_shape(x) for x in obj]
+    elif isinstance(obj, dict): return {k: print_shape(v) for k, v in obj.items()}
+    else: return obj
 
 
 def avg_checkpoints(sds):
