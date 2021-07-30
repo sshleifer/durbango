@@ -58,26 +58,22 @@ def parse_entry(ln):
 def id_to_series(df, id, metric, idx_col=U):
     return select_idlist(df, [id]).drop_duplicates(idx_col, keep='last').set_index(idx_col)[metric]
 
-def compare_runs(df, ids=None, metric='ppl', idx_col=U, extra_ids=None):
+
+def compare_runs(df, ids=None, metric='ppl', idx_col=U, extra_ids=None, return_gaps=False):
     if ids is None: ids = df['id'].unique().tolist()
     if isinstance(ids, np.ndarray): ids = ids.tolist()
     if isinstance(extra_ids, str):
         ids.append(extra_ids)
     elif isinstance(extra_ids, list):
         ids.extend(extra_ids)
-    return pd.concat([id_to_series(df, id, metric, idx_col=idx_col).to_frame(id) for id in ids], axis=1)
-
-
-
-
-def compare_runs(df, ids=None, metric='ppl', idx_col=U, extra_ids=None):
-    if ids is None: ids = df['id'].unique().tolist()
-    if isinstance(ids, np.ndarray): ids = ids.tolist()
-    if isinstance(extra_ids, str):
-        ids.append(extra_ids)
-    elif isinstance(extra_ids, list):
-        ids.extend(extra_ids)
-    return pd.concat([id_to_series(df, id, metric, idx_col=idx_col).to_frame(id) for id in ids], axis=1)
+    pld = pd.concat([id_to_series(df, id, metric, idx_col=idx_col).to_frame(id) for id in ids], axis=1).dropna(how='all', axis=1)
+    col_order = pld.min().sort_values(ascending=False).index
+    pld = pld[col_order]
+    if not return_gaps:
+        return pld
+    else:
+        gaps = pld.apply(lambda x: x -  pld[col_order[0]])
+        return gaps
 
 
 def get_train_hours_without_interrupt(df):
