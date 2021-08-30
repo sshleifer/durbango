@@ -2,11 +2,12 @@ import numpy as np
 import pandas as pd
 import datetime
 import warnings
-from durbango.nb_utils import remove_prefix, tqdm_nice
+from durbango.nb_utils import remove_prefix, tqdm_nice, remove_suffix
 from fb_sweep.agg_results import find_last_matching_line, reverse_readline, find_all_matching_lines, tryfloat
 from pathlib import Path
 import torch
 import json
+import os
 U='K updates'
 KU = 'K updates'
 TSEEN = 'tokens_seen_bil'
@@ -53,7 +54,8 @@ def parse_entry(ln):
     record['ts'] = ts#f"{year}{splat.split('2021')[1]}"
     return record
 
-
+def get_id(path):
+    return os.path.basename(remove_suffix(path, '/train.log'))
 
 def id_to_series(df, id, metric, idx_col=U):
     return select_idlist(df, [id]).drop_duplicates(idx_col, keep='last').set_index(idx_col)[metric]
@@ -238,9 +240,30 @@ renamer = {
 }
 
 
-ad2 = {'ppl': 'min', KU: 'max', 'ts': 'max', 'ngpu': 'max', 'dl': 'max', 'soft_loss': 'min', 'hard_loss': 'min', 'last_wps': 'median', TSEEN: 'max', WGPU: 'max'}
-def make_tab(df, agg_dict=ad2):
-    real_agg = {k:v for k,v in agg_dict.items() if k in df.columns}
+def wps_tab(fdf, **kwargs):
+    assert 'metric' not in kwargs
+    ppl_tab = compare_runs(fdf, metric='ppl', **kwargs).dropna(thresh=5,axis=1).dropna().iloc[-1].sort_values()
+    wps_tab = compare_runs(fdf, metric='wps').max()
+    return ppl_tab.round(2).to_frame('ppl').assign(wps=wps_tab.astype(int))
+
+
+ad2 = {'ppl': 'min', KU: 'max', 'ts': 'max', 'ngpu': 'max', 'dl': 'max', 'soft_loss': 'min', 'hard_loss': 'min', 'last_wps': 'median', TSEEN: 'max', WGPU: 'max', 'm_params': 'max'}
+def find_num_trained(path, pattern='num. trained'):
+    lns = reverse_readline(path)
+    keep_lns = []
+    for l in lns:
+        if pattern not in l: continue
+        match = re.search('num. trained: (\d+)', l.replace(',', ''))
+        if match:
+            keep_lns.append(int(match.groups()[0]))
+        #if pattern in l: keep_lns.append(l)
+    return max(keep_lns)
+
+def make_tab(df, agg_dict=ad2, extra_ags = None):
+    ag = agg_dict.copy()
+    if extra_ags is not None:
+        ag.update(extra_ags)
+    real_agg = {k:v for k,v in ag.items() if k in df.columns}
     tab = df.groupby('id').agg(real_agg).sort_values('ppl').rename(columns={'last_wps': 'wps'})
     #tab['start_ts'] = df.groupby('id').ts.min()
     #tab['hours'] = (tab.ts-tab.start_ts)/np.timedelta64(1, 'h')
@@ -277,12 +300,15 @@ def make_fdf_and_tab(path='/private/home/sshleifer/fairseq-py/distill_valid_loss
 
     df['dl'] = df.id.apply(get_dl)
     df['ngpu'] = df['id'].apply(lambda x: x.split('ngpu')[-1]).astype(int)
-    if 'nll_loss' in df.columns:
+    if 'nll_loss' in df.columns and 'hard_loss' in df.columns:
         df['nll_loss'] = df.nll_loss.fillna(df.hard_loss).fillna(df.loss)
     else:
         df['nll_loss'] = df['loss']
     df['ppl'] = 2 ** df.nll_loss
-
+    nt = {}
+    for p in df['path'].unique():
+        nt[p] = find_num_trained(f'{p}/train.log')
+    df['m_params'] = df.path.apply(lambda x: nt[x]) / 1e6
     # %%capture
     with warnings.catch_warnings(record=True):
         train_log_df = parse_epoch_logs(df.path.unique())
