@@ -257,6 +257,9 @@ def find_num_trained(path, pattern='num. trained'):
         if match:
             keep_lns.append(int(match.groups()[0]))
         #if pattern in l: keep_lns.append(l)
+    if not keep_lns:
+        print(path)
+        return -1
     return max(keep_lns)
 
 def make_tab(df, agg_dict=ad2, extra_ags = None):
