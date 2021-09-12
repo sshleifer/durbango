@@ -262,7 +262,8 @@ def find_num_trained(path, pattern='num. trained'):
         return -1
     return max(keep_lns)
 
-def make_tab(df, agg_dict=ad2, extra_ags = None):
+
+def make_tab(df, agg_dict=ad2, extra_ags=None):
     ag = agg_dict.copy()
     if extra_ags is not None:
         ag.update(extra_ags)
@@ -270,9 +271,11 @@ def make_tab(df, agg_dict=ad2, extra_ags = None):
     tab = df.groupby('id').agg(real_agg).sort_values('ppl').rename(columns={'last_wps': 'wps'})
     #tab['start_ts'] = df.groupby('id').ts.min()
     #tab['hours'] = (tab.ts-tab.start_ts)/np.timedelta64(1, 'h')
-    tab['hours'] = get_train_hours_without_interrupt(df).sort_values(ascending=False).round(1)
+    tab['hours'] = get_train_hours_without_interrupt(df).sort_values(ascending=False)
     tab['wps'] =(tab['wps'].fillna(0) / 1000).astype(int)
-    return tab
+    tab['up_gpu_hr'] = (tab[KU] / tab[WGPU]).round(1)
+    tab['up_day'] = (tab[KU] / tab['hours']).round(1)
+    return tab.round({'ppl': 2, 'hours': 1})
 
 from pathlib import Path
 def make_fdf_and_tab(path='/private/home/sshleifer/fairseq-py/distill_valid_loss_entries.log'):
