@@ -1,4 +1,3 @@
-#IMPORTS at top of notebook
 %load_ext autoreload
 %autoreload 2
 %matplotlib inline
@@ -6,23 +5,37 @@
 
 ISO = "ISO-8859-1"
 
+from ast import Import
 import os
 import pickle
 from tqdm import tqdm, tqdm_notebook, tnrange
 import numpy as np
 import pandas as pd
 import sys
-from sklearn.metrics import *
+
 import itertools
 from collections import *
 import funcy
-from scipy.spatial.distance import cosine as cosine_distance
+import_exceptions = (ModuleNotFoundError, ImportError)
 import matplotlib.pyplot as plt
-from sklearn.linear_model import *
-from sklearn.model_selection import StratifiedKFold, KFold, ParameterGrid
-from sklearn.utils import shuffle
+
+try:
+    from scipy.spatial.distance import cosine as cosine_distance
+except import_exceptions:
+    pass
+
+
+try:
+
+    from sklearn.metrics import *
+    from sklearn.linear_model import *
+    from sklearn.model_selection import StratifiedKFold, KFold, ParameterGrid
+    from sklearn.utils import shuffle
+    from sklearn.preprocessing import StandardScaler, RobustScaler
+except import_exceptions:
+    pass
 from numpy.testing import assert_array_equal
-from sklearn.preprocessing import StandardScaler, RobustScaler
+#
 from pathlib import Path
 import re
 from glob import glob
@@ -67,11 +80,11 @@ try:
         from lightgbm.sklearn import LGBMClassifier, LGBMRegressor
         import seaborn as sns
         from PIL import Image
-except ImportError:
+except import_exceptions:
     pass
 
 Path.ls =  lambda self: sorted(list(self.iterdir()))
-ParameterGrid.l = property(lambda self: list(self))
+
 pd.Series.flipped_dict = property(lambda ser: funcy.flip(ser.to_dict()))
 
 pd.DataFrame.dsort = descending_sort
